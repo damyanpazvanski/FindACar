@@ -60,6 +60,7 @@
                                 <label for="amount">Price range:</label>
                                 <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
                                 <input type="text" name="min" value="{{ app.request.get('min') }}" hidden readonly>
+                                <input type="text" name="maxSetted" value="{{ app.request.get('max') }}" hidden readonly>
                                 <input type="text" name="max" value="{{ max }}" hidden readonly>
                             </p>
                             <div id="progressBar" style="margin-top: 35px"></div>
@@ -132,18 +133,20 @@
         $( function() {
             var progressMin = $('form input[name="min"]').val() || 0;
             var progressMax = $('form input[name="max"]').val() || 1000000;
+            var progressMaxSetted = $('form input[name="maxSetted"]').val();
 
             $("#progressBar").slider({
                 range: true,
                 min: 0,
                 max: progressMax,
-                values: [ progressMin, progressMax ],
+                values: [ progressMin, progressMaxSetted || progressMax],
                 slide: function( event, ui ) {
                     $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
                     progressMin = ui.values[0];
                     progressMax = ui.values[1];
                 }
             });
+
             $( "#amount" ).val( "$" + $("#progressBar").slider( "values", 0 ) +
                 " - $" + $("#progressBar").slider( "values", 1 ) );
 
