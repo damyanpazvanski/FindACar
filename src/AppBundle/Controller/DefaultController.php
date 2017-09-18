@@ -60,7 +60,19 @@ class DefaultController extends Controller
             ->getQuery()
             ->getResult();
 
-        $max = $cars[count($cars) - 1]->getPrice();
+        $maxPrice = $this->getDoctrine()
+            ->getRepository(Car::class)
+            ->createQueryBuilder('c')
+            ->select('c.price')
+            ->orderBy('c.price', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+
+        $max = 0;
+        if (!empty($maxPrice[0])) {
+            $max = $maxPrice[0]['price'];
+        }
 
         $brands = $this->getDoctrine()
             ->getRepository(Brand::class)
